@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── PWA Meta ─────────────────────────────────────────────────────────── -->
+  <meta name="theme-color" content="#0a0f1e" />
+  <meta name="description" content="Offline-capable weather dashboard — see the sky anywhere, anytime" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Weather Lens" />
+
+  <!-- ── Open Graph ───────────────────────────────────────────────────────── -->
+  <meta property="og:title"       content="Weather Lens" />
+  <meta property="og:description" content="Offline-capable weather dashboard" />
+  <meta property="og:type"        content="website" />
+
+  <!-- ── Icons ────────────────────────────────────────────────────────────── -->
+  <link rel="icon"             href="/icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/icons/icon-512.png" />
+
+  <!-- ── PWA Manifest ─────────────────────────────────────────────────────── -->
+  <!--
+    The <link rel="manifest"> tag is what tells the browser this is a PWA.
+    The browser reads manifest.json to:
+      - Set the install prompt criteria
+      - Define the icon, splash screen, and theme color
+      - Control the display mode (standalone = no browser chrome)
+  -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- ── Styles ───────────────────────────────────────────────────────────── -->
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <title>Weather Lens</title>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ── HEADER ──────────────────────────────────────────────────────────── -->
+  <header class="app-header">
+    <div class="app-logo">
+      <span class="logo-icon" aria-hidden="true">🔭</span>
+      <div>
+        <div class="logo-text">Weather Lens</div>
+        <div class="logo-sub">PWA · Offline ready</div>
+      </div>
+    </div>
+
+    <!--
+      SW Status Indicator
+      Shows the current service worker state (registered ✓, error, etc.)
+      Updated by app.js → setSwStatus()
+    -->
+    <div class="sw-status" id="sw-status" data-state="pending">
+      <div class="sw-dot" aria-hidden="true"></div>
+      <span class="sw-message">Initialising…</span>
+    </div>
+  </header>
+
+  <!-- ── BANNERS ─────────────────────────────────────────────────────────── -->
+  <div class="banners">
+
+    <!--
+      Offline Banner
+      Shown via navigator.onLine + online/offline events.
+      Even while offline the app still works — it serves data from
+      the Service Worker cache and IndexedDB.
+    -->
+    <div class="banner banner-offline hidden" id="offline-banner" role="alert">
+      <span aria-hidden="true">📡</span>
+      <span class="banner-text">You're offline — showing cached data</span>
+    </div>
+
+    <!--
+      Install Banner
+      The browser fires `beforeinstallprompt` when PWA install criteria are met.
+      We capture it in app.js and show this custom UI instead of the browser default.
+    -->
+    <div class="banner banner-install hidden" id="install-banner" role="status">
+      <span aria-hidden="true">📲</span>
+      <span class="banner-text">Install Weather Lens for offline access</span>
+      <button class="banner-btn" id="install-banner-btn">Install</button>
+    </div>
+
+    <!--
+      Update Banner
+      When a new Service Worker version is found and waiting to activate,
+      we show this prompt so the user can refresh at their convenience.
+    -->
+    <div class="banner banner-update hidden" id="update-banner" role="status">
+      <span aria-hidden="true">✨</span>
+      <span class="banner-text">New version available</span>
+      <button class="banner-btn" id="update-btn">Reload</button>
+    </div>
+
+  </div>
+
+  <!-- ── MAIN COLUMN ─────────────────────────────────────────────────────── -->
+  <main class="main-col">
+
+    <!-- City Search -->
+    <div id="search-container" role="search">
+      <label for="search-input" class="sr-only">Search for a city</label>
+      <input
+        type="search"
+        id="search-input"
+        placeholder="Search city — e.g. Hyderabad, Tokyo, London…"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <ul id="search-results" class="hidden" role="listbox" aria-label="City search results"></ul>
+    </div>
+
+    <!-- Weather Card (hidden until a city is selected) -->
+    <div id="weather-card" class="hidden" aria-live="polite">
+      <div id="weather-content"></div>
+    </div>
+
+  </main>
+
+  <!-- ── SIDEBAR ──────────────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+
+    <!-- Saved Cities -->
+    <section class="sidebar-section">
+      <h2 class="sidebar-title">Saved cities</h2>
+      <ul id="favourites-list" role="list"></ul>
+
+      <!--
+        Install Button (Add to Home Screen)
+        Shown when deferredInstallPrompt is available.
+        Clicking calls deferredInstallPrompt.prompt()
+      -->
+      <button id="install-btn" class="hidden" aria-label="Install Weather Lens app">
+        <span aria-hidden="true">📲</span> Add to home screen
+      </button>
+    </section>
+
+    <!-- PWA Info (Educational) -->
+    <section class="sidebar-section">
+      <h2 class="sidebar-title">PWA features active</h2>
+      <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+        <li style="font-size:0.82rem; color:var(--star-dim);">
+          <span style="color:var(--success); margin-right:6px;">✓</span>
+          <strong>Service Worker</strong> — caches assets &amp; API responses
+        </li>
+        <li style="font-size:0.82rem; color:var(--star-dim);">
+          <span style="color:var(--success); margin-right:6px;">✓</span>
+          <strong>Offline fallback</strong> — last weather always available
+        </li>
+        <li style="font-size:0.82rem; color:var(--star-dim);">
+          <span style="color:var(--success); margin-right:6px;">✓</span>
+          <strong>IndexedDB</strong> — cities &amp; weather cached locally
+        </li>
+        <li style="font-size:0.82rem; color:var(--star-dim);">
+          <span style="color:var(--success); margin-right:6px;">✓</span>
+          <strong>Install prompt</strong> — add to home screen
+        </li>
+        <li style="font-size:0.82rem; color:var(--star-dim);">
+          <span style="color:var(--success); margin-right:6px;">✓</span>
+          <strong>Background Sync</strong> — syncs favourites when back online
+        </li>
+      </ul>
+    </section>
+
+  </aside>
+
+</div>
+
+<!--
+  app.js uses ES modules (import/export).
+  type="module" also defers execution automatically.
+-->
+<script type="module" src="/js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0f1e" />
+  <link rel="manifest" href="/manifest.json" />
+  <title>Offline — Weather Lens</title>
+  <style>
+    :root {
+      --sky-deep:  #07090f;
+      --sky-panel: #161d2e;
+      --sky-border: rgba(99,131,197,0.18);
+      --star:      #e8edf5;
+      --star-dim:  #8899bb;
+      --star-faint:#4a5a7a;
+      --accent:    #6383c5;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--sky-deep);
+      color: var(--star);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    .offline-card {
+      background: var(--sky-panel);
+      border: 1px solid var(--sky-border);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      max-width: 400px;
+      width: 100%;
+    }
+    .icon { font-size: 4rem; margin-bottom: 1.5rem; display: block;
+            animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.5; }
+    }
+    h1 { font-size: 1.5rem; font-weight: 500; margin-bottom: 0.75rem; }
+    p  { color: var(--star-dim); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem; }
+    .btn {
+      display: inline-block;
+      background: rgba(99,131,197,0.2);
+      border: 1px solid rgba(99,131,197,0.35);
+      color: var(--accent);
+      border-radius: 12px;
+      padding: 0.7rem 1.75rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: rgba(99,131,197,0.3); }
+  </style>
+</head>
+<body>
+  <div class="offline-card">
+    <span class="icon" aria-hidden="true">📡</span>
+    <h1>You're offline</h1>
+    <p>
+      Weather Lens couldn't reach the network.<br />
+      Your previously viewed cities and their last-known
+      weather are still available in the app.
+    </p>
+    <a href="/index.html" class="btn">← Back to app</a>
+  </div>
+</body>
+</html>
