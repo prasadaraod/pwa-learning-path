@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="96" fill="#0a0f1e"/>
+  <!-- Stars -->
+  <circle cx="80"  cy="60"  r="3" fill="#6383c5" opacity="0.8"/>
+  <circle cx="150" cy="30"  r="2" fill="#8899bb" opacity="0.6"/>
+  <circle cx="400" cy="50"  r="3" fill="#6383c5" opacity="0.7"/>
+  <circle cx="460" cy="90"  r="2" fill="#8899bb" opacity="0.5"/>
+  <circle cx="50"  cy="200" r="2" fill="#6383c5" opacity="0.4"/>
+  <circle cx="480" cy="250" r="2" fill="#8899bb" opacity="0.5"/>
+  <!-- Telescope body -->
+  <g transform="translate(256,256)">
+    <!-- lens -->
+    <ellipse cx="-70" cy="-30" rx="28" ry="18" fill="none" stroke="#6383c5" stroke-width="8" stroke-linecap="round"/>
+    <!-- tube -->
+    <line x1="-42" y1="-38" x2="50" y2="-10" stroke="#e8edf5" stroke-width="10" stroke-linecap="round"/>
+    <line x1="-42" y1="-22" x2="50" y2="6"   stroke="#e8edf5" stroke-width="10" stroke-linecap="round"/>
+    <!-- eyepiece -->
+    <rect x="44" y="-14" width="22" height="24" rx="4" fill="#8899bb"/>
+    <!-- tripod -->
+    <line x1="10"  y1="10"  x2="-30" y2="80" stroke="#4a5a7a" stroke-width="6" stroke-linecap="round"/>
+    <line x1="10"  y1="10"  x2="50"  y2="80" stroke="#4a5a7a" stroke-width="6" stroke-linecap="round"/>
+    <line x1="10"  y1="10"  x2="10"  y2="80" stroke="#4a5a7a" stroke-width="6" stroke-linecap="round"/>
+    <!-- crossbar -->
+    <line x1="-18" y1="55"  x2="38"  y2="55" stroke="#4a5a7a" stroke-width="4" stroke-linecap="round"/>
+    <!-- star target -->
+    <circle cx="-100" cy="-80" r="8" fill="#6383c5" opacity="0.9"/>
+    <circle cx="-100" cy="-80" r="14" fill="none" stroke="#6383c5" stroke-width="2" stroke-dasharray="4 4" opacity="0.5"/>
+  </g>
+</svg>
