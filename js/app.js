@@ -71,8 +71,8 @@ async function registerServiceWorker() {
   }
 
   try {
-    swRegistration = await navigator.serviceWorker.register('./sw.js', {
-      scope: '/'
+    swRegistration = await navigator.serviceWorker.register('/pwa-learning-path/sw.js', {
+      scope: '/pwa-learning-path/'
     });
 
     console.log('[App] Service Worker registered. Scope:', swRegistration.scope);
