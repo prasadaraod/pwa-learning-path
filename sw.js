@@ -10,7 +10,7 @@
  * so stale assets are cleaned up automatically.
  */
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const STATIC_CACHE  = `weather-lens-static-${CACHE_VERSION}`;
 const API_CACHE     = `weather-lens-api-${CACHE_VERSION}`;
 const FONT_CACHE    = `weather-lens-fonts-${CACHE_VERSION}`;
